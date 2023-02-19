@@ -1,0 +1,5 @@
+C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.csproj.AssemblyReference.cache
+C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.AssemblyInfoInputs.cache
+C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.AssemblyInfo.cs
+C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.csproj.CoreCompileInputs.cache
