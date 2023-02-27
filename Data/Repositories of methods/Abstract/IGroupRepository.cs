@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Data.Repositoriesofmethods.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories_of_methods.Abstract
 {
-    internal interface IGroupRepository
+    internal interface IGroupRepository: IRepository<Group>
     {
 
-        List<Group> GetAll();
-        Group Get(int id);  
-        void Add (Group group); 
-        void Update (Group group);  
-        void Delete (Group group);
+
         Group GetByName(string name);
 
     }

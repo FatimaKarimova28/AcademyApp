@@ -1,5 +1,10 @@
-C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.csproj.AssemblyReference.cache
-C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.AssemblyInfoInputs.cache
-C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.AssemblyInfo.cs
-C:\Users\ibrah\OneDrive\Desktop\code\AcademyApp\AcademyApp\obj\Debug\net6.0\AcademyApp.csproj.CoreCompileInputs.cache
+C:/Users/ibrah/OneDrive/Desktop/code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.csproj.AssemblyReference.cache
+C:/Users/ibrah/OneDrive/Desktop/code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/ibrah/OneDrive/Desktop/code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.AssemblyInfoInputs.cache
+C:/Users/ibrah/OneDrive/Desktop/code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.AssemblyInfo.cs
+C:/Users/ibrah/OneDrive/Desktop/code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.csproj.CoreCompileInputs.cache
+/Users/ibrahimova.fatima.israyilgmail.com/Desktop/My Code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.csproj.AssemblyReference.cache
+/Users/ibrahimova.fatima.israyilgmail.com/Desktop/My Code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/ibrahimova.fatima.israyilgmail.com/Desktop/My Code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.AssemblyInfoInputs.cache
+/Users/ibrahimova.fatima.israyilgmail.com/Desktop/My Code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.AssemblyInfo.cs
+/Users/ibrahimova.fatima.israyilgmail.com/Desktop/My Code/AcademyApp/AcademyApp/obj/Debug/net6.0/AcademyApp.csproj.CoreCompileInputs.cache

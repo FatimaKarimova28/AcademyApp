@@ -1,6 +1,7 @@
 ﻿using Core.Entities;
 using Core.Helpers;
 using Data.Repositories_of_methods.Concrete;
+using Data.Repositoriesofmethods.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,92 +15,108 @@ namespace Presentation.Services
     public class GroupService
     {
         private readonly GroupRepository _groupRepository;
+        private readonly StudentRepository _studentRepository;
+        private readonly TeacherRepository _teacherRepository;
         public GroupService()
         {
             _groupRepository= new GroupRepository();
+            _studentRepository = new StudentRepository();
+            _teacherRepository = new TeacherRepository();
         }
-        public void Create()
-        {
-            ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Name=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
-            string name = Console.ReadLine();
+      
 
-        MaxSizeDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Max Size Of Group=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
-            int maxSize;
-            bool isSucceeded = int.TryParse(Console.ReadLine(), out maxSize);
-            if (!isSucceeded)
-            {
-                ConsoleHelper.WriteWithColor("Max size is not correct format", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto MaxSizeDescription;
-            }
-            if (maxSize > 18)
-            {
-                ConsoleHelper.WriteWithColor("Max size should be less than or equals to 18", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto MaxSizeDescription;
-            }
-        StartDateDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Start Date=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
-            DateTime startDate;
-            isSucceeded = DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
-            if (!isSucceeded)
-            {
-                ConsoleHelper.WriteWithColor("Start date is not correct format!", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto StartDateDescription;
-            }
-            DateTime boundryDate = new DateTime(2015, 1, 1);
-            if (startDate < boundryDate)
-            {
-                ConsoleHelper.WriteWithColor("Start date is not chosen right", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto StartDateDescription;
-            }
-        EndDateDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter End Date=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
-            DateTime endDate;
-            isSucceeded = DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
-            if (!isSucceeded)
-            {
-                ConsoleHelper.WriteWithColor("End date is not correct format!", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto EndDateDescription;
-            }
-            if (startDate > endDate)
-            {
-                ConsoleHelper.WriteWithColor("End date must be bigger than start date", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto EndDateDescription;
-            }
-
-            var group = new Group
-            {
-                Name = name,
-                MaxSize = maxSize,
-                StartDate = startDate,
-                EndDate = endDate,
-            };
-            _groupRepository.Add(group);
-            ConsoleHelper.WriteWithColor($"Group successfully created with: \n Name: {group.Name} \n Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n", ConsoleColor.Magenta);
-
-
-        }
-        public void GetAll()
+        public void GetAll(Admin admin)
         {
             var groups = _groupRepository.GetAll();
-            ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=ALL GROUPS=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
-            foreach (var group in groups)
+            if (groups.Count == 0)
             {
-                ConsoleHelper.WriteWithColor($"Name: {group.Name} \n  Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n", ConsoleColor.Magenta);
+                ConsoleHelper.WriteWithColor("There is no any groups!", ConsoleColor.Red);
+                Thread.Sleep(1000);
+                AreYouSureDescription:  ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Do you want to create new group?=*=*=*=*=*=*=*= \n =*=*=*=*=*=*=*=<<<<Y>>>> or <<<<N>>>>=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                char decision;
+                bool isSucceededResult = char.TryParse(Console.ReadLine(), out decision);
+                if (!isSucceededResult)
+                {
+                    ConsoleHelper.WriteWithColor("Your choice is not correct format!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto AreYouSureDescription;
+
+                }
+                if (!(decision == 'Y' || decision == 'N'))
+                {
+                    ConsoleHelper.WriteWithColor("Your choice is not correct!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto AreYouSureDescription;
+                }
+                if (decision == 'Y')
+                {
+                    Create(admin);
+                }
+
+                
+            }
+            else
+            {
+                ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=ALL GROUPS=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                foreach (var group in groups)
+                {
+                    ConsoleHelper.WriteWithColor($"Name: {group.Name} \n  Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n Created By: {group.CreatedBy}", ConsoleColor.Magenta);
+                }
             }
 
 
         }
 
-        public void GetGroupById()
+        public void GetAllGroupsByTeacher()
+        {
+
+            var teachers = _teacherRepository.GetAll();
+            foreach (var teacher in teachers)
+            {
+                ConsoleHelper.WriteWithColor($"Id: {teacher.Id} \n Fullname {teacher.Name} {teacher.Surname}", ConsoleColor.DarkYellow);
+            }
+
+        GroupIdDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Teacher's Id:=*=*=*=*=*=*=*=", ConsoleColor.DarkYellow);
+            int id;
+            bool isSucceeded = int.TryParse(Console.ReadLine(), out id);
+            if (!isSucceeded)
+            {
+
+                ConsoleHelper.WriteWithColor("Id is not correct format!", ConsoleColor.Red);
+                Thread.Sleep(1000);
+                goto GroupIdDescription;
+
+            }
+
+            var dbTeacher = _teacherRepository.Get(id);
+            if (dbTeacher is null)
+            {
+                ConsoleHelper.WriteWithColor("There is no any theacher in this Id!", ConsoleColor.Red);
+
+            }
+
+            else
+            {
+                foreach (var group in dbTeacher.Groups)
+                {
+
+                    ConsoleHelper.WriteWithColor($"Teacher's Group: \n Id: {group.Id} \n Name: {group.Name}", ConsoleColor.DarkYellow);
+
+                }
+
+
+            }
+
+
+        }
+
+
+        public void GetGroupById(Admin admin)
         {
             var groups = _groupRepository.GetAll();
             if(groups.Count == 0)
             {
-            AreYouSureDescription: ConsoleHelper.WriteWithColor("There is no any group", ConsoleColor.Red);
+            AreYouSureDescription: ConsoleHelper.WriteWithColor("There is no any group!", ConsoleColor.Red);
                 Console.WriteLine(" "); 
                 Thread.Sleep(1500);
                 ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Do you want to create new group?=*=*=*=*=*=*=*= \n =*=*=*=*=*=*=*=<<<<Y>>>> or <<<<N>>>>=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
@@ -107,20 +124,20 @@ namespace Presentation.Services
                 bool isSucceededResult = char.TryParse(Console.ReadLine(), out decision);
                 if(!isSucceededResult)
                 {
-                    ConsoleHelper.WriteWithColor("Your choice is not correct format", ConsoleColor.Red);
+                    ConsoleHelper.WriteWithColor("Your choice is not correct format!", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     goto AreYouSureDescription;
 
                 }
                 if(!(decision == 'Y' || decision == 'N'))
                 {
-                    ConsoleHelper.WriteWithColor("Your choice is not correct", ConsoleColor.Red);
+                    ConsoleHelper.WriteWithColor("Your choice is not correct!", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     goto AreYouSureDescription;
                 }
                 if(decision == 'Y')
                 {
-                    Create();
+                    Create(admin);
                 }
             }
             else
@@ -130,18 +147,18 @@ namespace Presentation.Services
                 bool isSucceeded = int.TryParse(Console.ReadLine(), out id);
                 if (!isSucceeded)
                 {
-                    ConsoleHelper.WriteWithColor("Inputed id is not correct format", ConsoleColor.Red);
+                    ConsoleHelper.WriteWithColor("Inputed id is not correct format!", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     goto EnterIdDescription;
                 }
                 var group = _groupRepository.Get(id);
                 if (group == null)
                 {
-                    ConsoleHelper.WriteWithColor("There is no any group in this Id", ConsoleColor.Red);
+                    ConsoleHelper.WriteWithColor("There is no any group in this Id!", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     goto EnterIdDescription;
                 }
-                ConsoleHelper.WriteWithColor($" Id: {group.Id} \n Name: {group.Name} \n Max Size: {group.MaxSize} \n Start Date: {group.StartDate} \n End Date: {group.EndDate} \n ", ConsoleColor.DarkMagenta);
+                ConsoleHelper.WriteWithColor($" Id: {group.Id} \n Name: {group.Name} \n Max Size: {group.MaxSize} \n Start Date: {group.StartDate} \n End Date: {group.EndDate} \n Created By: {group.CreatedBy} ", ConsoleColor.DarkMagenta);
 
 
             }
@@ -154,7 +171,7 @@ namespace Presentation.Services
 
         }
 
-        public void GetGroupByName()
+        public void GetGroupByName(Admin admin)
         {
             var groups = _groupRepository.GetAll();
             if (groups.Count == 0)
@@ -180,7 +197,7 @@ namespace Presentation.Services
                 }
                 if (decision == 'Y')
                 {
-                    Create();
+                    Create(admin);
                 }
             }
             else
@@ -197,7 +214,7 @@ namespace Presentation.Services
                 
                 else
                 {
-                    ConsoleHelper.WriteWithColor($" Id: {group.Id} \n Name: {group.Name} \n Max Size: {group.MaxSize} \n Start Date: {group.StartDate} \n End Date: {group.EndDate} \n ", ConsoleColor.DarkMagenta);
+                    ConsoleHelper.WriteWithColor($" Id: {group.Id} \n Name: {group.Name} \n Max Size: {group.MaxSize} \n Start Date: {group.StartDate} \n End Date: {group.EndDate} \n Created By: {group.CreatedBy} ", ConsoleColor.DarkMagenta);
                 }
                 
               
@@ -206,13 +223,126 @@ namespace Presentation.Services
 
         }
 
+        public void Create(Admin admin)
+        {
+            if (_teacherRepository.GetAll().Count == 0)
+            {
+
+                ConsoleHelper.WriteWithColor("You must create a teacher before!", ConsoleColor.Red);
+
+            }
+
+            else
+            {
+            GroupNameDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Name=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                string name = Console.ReadLine();
+                var group = _groupRepository.GetByName(name);
+                if (group is not null)
+                {
+                    ConsoleHelper.WriteWithColor("This group is already added!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto GroupNameDescription;
+
+                }
+            MaxSizeDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Max Size Of Group=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                int maxSize;
+                bool isSucceeded = int.TryParse(Console.ReadLine(), out maxSize);
+                if (!isSucceeded)
+                {
+                    ConsoleHelper.WriteWithColor("Max size is not correct format", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto MaxSizeDescription;
+                }
+                if (maxSize > 18)
+                {
+                    ConsoleHelper.WriteWithColor("Max size should be less than or equals to 18", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto MaxSizeDescription;
+                }
+            StartDateDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Start Date=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                DateTime startDate;
+                isSucceeded = DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
+                if (!isSucceeded)
+                {
+                    ConsoleHelper.WriteWithColor("Start date is not correct format!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto StartDateDescription;
+                }
+                DateTime boundryDate = new DateTime(2015, 1, 1);
+                if (startDate < boundryDate)
+                {
+                    ConsoleHelper.WriteWithColor("Start date is not chosen right", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto StartDateDescription;
+                }
+            EndDateDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter End Date=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                DateTime endDate;
+                isSucceeded = DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate);
+                if (!isSucceeded)
+                {
+                    ConsoleHelper.WriteWithColor("End date is not correct format!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto EndDateDescription;
+                }
+                if (startDate > endDate)
+                {
+                    ConsoleHelper.WriteWithColor("End date must be bigger than start date", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto EndDateDescription;
+                }
+
+                var teachers = _teacherRepository.GetAll();
+
+                foreach (var teacher in teachers)
+                {
+                    ConsoleHelper.WriteWithColor($" Id: {teacher.Id} \n Fullname: {teacher.Name} {teacher.Surname}", ConsoleColor.DarkCyan);
+                }
+
+            TeacherIdDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Teacher id:=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+                int teacherId;
+                isSucceeded = int.TryParse(Console.ReadLine(), out teacherId);
+                if (!isSucceeded)
+                {
+                    ConsoleHelper.WriteWithColor("Teacher id is not correct format!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto TeacherIdDescription;
+                }
+
+                var dbTeacher = _teacherRepository.Get(teacherId);
+                if (dbTeacher is null)
+                {
+
+                    ConsoleHelper.WriteWithColor("There is no any teacher in this id!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto TeacherIdDescription;
+
+                }
+
+
+                group = new Group
+                {
+                    Name = name,
+                    MaxSize = maxSize,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    CreatedBy = admin.Username,
+                    Teacher = dbTeacher
+                };
+                dbTeacher.Groups.Add(group);
+
+                _groupRepository.Add(group);
+                ConsoleHelper.WriteWithColor($"Group successfully created with: \n Name: {group.Name} \n Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n Created By: {group.CreatedBy}", ConsoleColor.Magenta);
+
+            }
+        }
+
         public void Delete()
         {
             var groupss = _groupRepository.GetAll();
             ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=ALL GROUPS=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
             foreach (var group in groupss)
             {
-                ConsoleHelper.WriteWithColor($"Name: {group.Name} \n  Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n", ConsoleColor.Magenta);
+                ConsoleHelper.WriteWithColor($"Name: {group.Name} \n  Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n Created By: {group.CreatedBy}", ConsoleColor.Magenta);
             }
         IdDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Id*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
             int id;
@@ -232,37 +362,20 @@ namespace Presentation.Services
             }
             else
             {
+                foreach (var student in dbGroup.Students)
+                {
+                    
+                    _studentRepository.Delete(student);
+                }
                 _groupRepository.Delete(dbGroup);
                 ConsoleHelper.WriteWithColor("Group successfully deleted", ConsoleColor.Green);
             }
 
         }
-        public void Exit()
+        
+        public void Update(Admin admin)
         {
-        AreYouSureDescription: ConsoleHelper.WriteWithColor("Are you sure? <<<<Y>>>> or <<<<N>>>>", ConsoleColor.DarkCyan);
-            char decision; 
-            bool isSucceeded = char.TryParse(Console.ReadLine(), out decision);
-            if (!isSucceeded)
-            {
-                ConsoleHelper.WriteWithColor("Your choice is not correct format", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto AreYouSureDescription;
-            }
-            if(!(decision == 'Y' || decision == 'N'))
-            {
-                ConsoleHelper.WriteWithColor("Your choice is not correct", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                goto AreYouSureDescription;
-            }
-            if (decision == 'Y')
-            {
-                return;
-            }
-
-        }
-        public void Update()
-        {
-            GetAll();
+            GetAll(admin);
         EnterGroupDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter group:=*=*=*=*=*=*=*= \n 1. ID \n or \n 2. Name", ConsoleColor.DarkCyan);
             int number;
             bool isSucceeded = int.TryParse(Console.ReadLine(), out number);
@@ -297,7 +410,7 @@ namespace Presentation.Services
                     Thread.Sleep(1000);
                     goto EnterGroupIdDescription;
                 }
-                InternalUpdate(group);
+                InternalUpdate(group, admin);
             }
             else
             {
@@ -310,13 +423,13 @@ namespace Presentation.Services
                     Thread.Sleep(1000);
                     goto EnterGroupNameDescription;
                 }
-                InternalUpdate(group);
+                InternalUpdate(group, admin);
 
 
             }
         }
 
-        private void InternalUpdate(Group group)
+        private void InternalUpdate(Group group, Admin admin)
         {
            
           
@@ -362,6 +475,7 @@ namespace Presentation.Services
                 group.StartDate = startDate;
                 group.EndDate = endDate;
                 group.MaxSize = maxSize;
+            group.ModifiedBy = admin.Username;
                 _groupRepository.Update(group);
             
         }

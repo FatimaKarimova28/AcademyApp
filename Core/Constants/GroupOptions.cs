@@ -8,13 +8,14 @@ namespace Core.Constants
 {
     public enum GroupOptions
     {
-        Exit,
+        BackTomainManu,
         CreateGroup,
         UpdateGroup,
         DeleteGroup,
         GetAllGroups,
         GetGroupById,
         GetGroupByName,
+        GetAllGroupsByTeacher
 
 
 

@@ -1,0 +1,40 @@
+﻿<Properties StartupConfiguration="{D1524438-4714-4C15-94E6-01FD022E5968}|Default">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.Presentation PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Presentation/Program.cs">
+    <Files>
+      <File FileName="Presentation/Program.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="AcademyApp" expanded="True">
+            <Node name="Core" expanded="True">
+              <Node name="Constants" expanded="True" />
+              <Node name="Entities" expanded="True" />
+              <Node name="Extensions" expanded="True" />
+              <Node name="Helpers" expanded="True" />
+            </Node>
+            <Node name="Data" expanded="True">
+              <Node name="Contexts" expanded="True" />
+              <Node name="Repositories of methods" expanded="True">
+                <Node name="Abstract" expanded="True" />
+                <Node name="Concrete" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="Presentation" expanded="True">
+              <Node name="Services" expanded="True" />
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.AcademyApp PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

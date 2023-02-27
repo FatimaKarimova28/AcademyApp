@@ -1,118 +1,299 @@
 ﻿using Core.Constants;
 using Core.Entities;
+using Core.Extensions;
 using Core.Helpers;
+using Data;
+using Data.Contexts;
 using Data.Repositories_of_methods.Concrete;
 using Presentation.Services;
 using System;
 using System.Data;
 using System.Globalization;
+using System.Text;
 
 namespace Presentation
 {
     public static class Program
     {
-        static GroupService _groupService;
-         static Program()
+        private readonly static GroupService _groupService;
+        private readonly static StudentService _studentService;
+        private readonly static AdminService _adminService;
+        private readonly static TeacherService _teacherService;
+        static Program()
         {
-            _groupService= new GroupService();
+            Console.OutputEncoding = Encoding.UTF8;
+            DbInitializer.SeedAdmins();
+            _groupService = new GroupService();
+            _studentService = new StudentService();
+            _adminService = new AdminService();
+            _teacherService = new TeacherService();
+           
         }
         public static object DateTimeStyle { get; private set; }
 
         static void Main(string[] args)
         {
+           
             
+            ConsoleHelper.WriteWithColor("|||||||||||||| Welcome ||||||||||||||", ConsoleColor.Cyan);
+            Thread.Sleep(1000);
 
-            while (true)
+            AuthorizeDescription:  var admin = _adminService.Authorize();
+            if (admin is not null)
             {
-                ConsoleHelper.WriteWithColor("|||||||||||||| Welcome ||||||||||||||", ConsoleColor.Cyan);
-                Console.WriteLine("     ");
-                ConsoleHelper.WriteWithColor("0) Exit", ConsoleColor.DarkYellow);
-                ConsoleHelper.WriteWithColor("1) Create Group", ConsoleColor.DarkYellow);
-                ConsoleHelper.WriteWithColor("2) Update Group", ConsoleColor.DarkYellow);
-                ConsoleHelper.WriteWithColor("3) Delete Group", ConsoleColor.DarkYellow);
-                ConsoleHelper.WriteWithColor("4) Get All Groups", ConsoleColor.DarkYellow);
-                ConsoleHelper.WriteWithColor("5) Get Group By Id", ConsoleColor.DarkYellow);
-                ConsoleHelper.WriteWithColor("6) Get Group By Name", ConsoleColor.DarkYellow);
-                Console.WriteLine("                  ");
+                ConsoleHelper.WriteWithColor($"|||||||||||||| Welcome, {admin.Username}||||||||||||||", ConsoleColor.Cyan);
+                Thread.Sleep(1000);
+                while (true)
 
-                ConsoleHelper.WriteWithColor("***********Select Option***********", ConsoleColor.Cyan);
-                int number;
-                bool isSucceeded = int.TryParse(Console.ReadLine(), out number);
-                if(!isSucceeded)
                 {
-                    ConsoleHelper.WriteWithColor("Inputed number is not correct format!", ConsoleColor.Red);
+                MainMenuDescription: ConsoleHelper.WriteWithColor("0 - Logout", ConsoleColor.Magenta);
+                    ConsoleHelper.WriteWithColor("1 - Groups", ConsoleColor.Magenta);
+                    ConsoleHelper.WriteWithColor("2 - Students", ConsoleColor.Magenta);
+                    ConsoleHelper.WriteWithColor("3 - Teachers", ConsoleColor.Magenta);
 
-                }
-                else
-                {
-                    if(!(number >=0 && number<7))
+                    int number;
+                    bool isSucceeded = int.TryParse(Console.ReadLine(), out number);
+                    if (!isSucceeded)
+
                     {
-                        ConsoleHelper.WriteWithColor("Inputed number is not exist!", ConsoleColor.Red);
+
+                        ConsoleHelper.WriteWithColor("Inputed number is not correct format!", ConsoleColor.Red);
+                        Thread.Sleep(1000);
+                        goto MainMenuDescription;
+
                     }
+
                     else
                     {
                         switch (number)
                         {
-                            case (int)GroupOptions.Exit:
-                                _groupService.Exit();
-                                break;
-                               
+                            case (int)MainMenuOptions.Groups:
+                                while (true)
+                                {
 
-                            case (int)GroupOptions.CreateGroup:
+                                    Console.WriteLine("     ");
+                                GroupDescription: ConsoleHelper.WriteWithColor("0) Back to Main Menu", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("1) Create Group", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("2) Update Group", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("3) Delete Group", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("4) Get All Groups", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("5) Get Group By Id", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("6) Get Group By Name", ConsoleColor.DarkYellow);
+                                    ConsoleHelper.WriteWithColor("7) Get All Groups By Teacher", ConsoleColor.DarkYellow);
+                                    Console.WriteLine("                  ");
 
-                                _groupService.Create();
+                                    ConsoleHelper.WriteWithColor("***********Select Option***********", ConsoleColor.Cyan);
 
-                                
-                                break;
+                                    isSucceeded = int.TryParse(Console.ReadLine(), out number);
+                                    if (!isSucceeded)
+                                    {
+                                        ConsoleHelper.WriteWithColor("Inputed number is not correct format!", ConsoleColor.Red);
 
+                                    }
+                                    else
+                                    {
 
-                            case (int)GroupOptions.UpdateGroup:
-                                _groupService.Update();
-                                break;
+                                        switch (number)
+                                        {
+                                            case (int)GroupOptions.GetAllGroups:
 
-
-                            case (int)GroupOptions.DeleteGroup:
-
-                                _groupService.Delete();
-
-                                break;
-                            case (int)GroupOptions.GetAllGroups:
-
-                                _groupService.GetAll();
+                                                _groupService.GetAll(admin);
 
 
-                                break;
-                            case (int)GroupOptions.GetGroupById:
+                                                break;
+                                            case (int)GroupOptions.GetGroupById:
 
-                                _groupService.GetGroupById();
-                                break;
-                            case (int)GroupOptions.GetGroupByName:
-                                _groupService.GetGroupByName();
-                                break;
+                                                _groupService.GetGroupById(admin);
+                                                break;
+                                            case (int)GroupOptions.GetGroupByName:
+                                                _groupService.GetGroupByName(admin);
+                                                break;
+
+                                            case (int)GroupOptions.GetAllGroupsByTeacher:
+                                                _groupService.GetAllGroupsByTeacher();
+                                                break;
+
+                                            case (int)GroupOptions.CreateGroup:
+
+                                                _groupService.Create(admin);
+
+
+                                                break;
+
+
+                                            case (int)GroupOptions.UpdateGroup:
+                                                _groupService.Update(admin);
+                                                break;
+
+
+                                            case (int)GroupOptions.DeleteGroup:
+
+                                                _groupService.Delete();
+
+                                                break;
+
+                                            case (int)GroupOptions.BackTomainManu:
+                                                goto MainMenuDescription;
+                                                break;
+                                            default:
+                                                ConsoleHelper.WriteWithColor("Inputed number is not exist!", ConsoleColor.Red);
+                                                goto GroupDescription;
+                                        }
+                                    }
+                                }
+                            case (int)MainMenuOptions.Logout:
+                                goto AuthorizeDescription;
+                            case (int)MainMenuOptions.Students:
+                                while (true)
+                                {
+
+                                    ConsoleHelper.WriteWithColor("0 - Go to Main Menu", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("1 - Create Student", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("2 - Update Student", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("3 - Delete Student", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("4 - Get All Student", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("5 - Get All Student By Group", ConsoleColor.DarkBlue);
+
+
+                                    isSucceeded = int.TryParse(Console.ReadLine(), out number);
+                                    if (!isSucceeded)
+                                    {
+                                        ConsoleHelper.WriteWithColor("Inputed number is not correct format!", ConsoleColor.Red);
+
+
+                                    }
+                                    else
+                                    {
+
+                                        switch (number)
+                                        {
+                                            case (int)StudentOptions.BackToMainMenu:
+                                                goto MainMenuDescription;
+                                                break;
+
+                                            case (int)StudentOptions.CreateStudent:
+
+                                                _studentService.Create(admin);
+
+                                                break;
+
+                                            case (int)StudentOptions.UpdateStudent:
+                                                _studentService.Update(admin);
+                                                break;
+                                            case (int)StudentOptions.DeleteStudent:
+                                                _studentService.Delete(admin);
+                                                break;
+
+                                            case (int)StudentOptions.GetAllStudents:
+                                                _studentService.GetAll(admin);
+                                                break;
+
+                                            case (int)StudentOptions.GetAllStudentsByGroup:
+
+                                                _studentService.GetAllByGroup(admin);
+                                                break;
+
+                                        }
+
+                                    }
+
+
+
+                                }
+                            case (int)MainMenuOptions.Teachers:
+                                while (true)
+                                {
+
+                                    ConsoleHelper.WriteWithColor("0 - Go to Main Menu", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("1 - Create Teacher", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("2 - Update Teacher", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("3 - Delete Teacher", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("4 - Get All Teachers", ConsoleColor.DarkBlue);
+                                    
+
+
+                                    isSucceeded = int.TryParse(Console.ReadLine(), out number);
+                                    if (!isSucceeded)
+                                    {
+                                        ConsoleHelper.WriteWithColor("Inputed number is not correct format!", ConsoleColor.Red);
+
+
+                                    }
+                                    else
+                                    {
+
+                                        switch (number)
+                                        {
+                                            case (int)TeacherOptions.BackToMainMenu:
+                                                goto MainMenuDescription;
+                                                break;
+
+                                            case (int)TeacherOptions.CreateTeacher:
+
+                                                _teacherService.Create();
+
+                                                break;
+
+                                            case (int)TeacherOptions.UpdateTeacher:
+                                                _teacherService.Update();
+                                                break;
+                                            case (int)TeacherOptions.DeleteTeacher:
+                                                _teacherService.Delete();
+                                     
+                                                break;
+
+                                            case (int)TeacherOptions.GetAllTeachers:
+                                                _teacherService.GetAll();
+                                             
+                                                break;
+
+                                          
+                                        }
+
+                                    }
+
+
+                                }
                             default:
-                                break;
-
+                                ConsoleHelper.WriteWithColor("Inputed number is not exist!", ConsoleColor.Red);
+                                goto MainMenuDescription;
                         }
-
-                    
-                    
-
-
-
 
 
 
                     }
                 }
-
-
             }
+           
+           
 
-
-
-
+           
         }
+    }
+
+}
+
+
+            
+
+                    
+                    
+
+
+
+
+
+
+                    
+                
+
+
+            
+
+
+
+
+        
 
        
-    }
-}
+    
