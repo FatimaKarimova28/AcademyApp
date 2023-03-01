@@ -13,6 +13,8 @@ namespace Data.Contexts
         {
             Groups = new List<Group>();
 
+            GroupFields = new List<GroupField>();
+
             Students = new List<Student>();
 
             Admins = new List<Admin>();
@@ -21,6 +23,8 @@ namespace Data.Contexts
         }
          
         public static List<Group> Groups { get; set; }
+
+        public static List<GroupField> GroupFields { get; set; }
 
         public static List<Student> Students { get; set; }
 

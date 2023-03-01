@@ -1,0 +1,15 @@
+﻿using System;
+namespace Core.Entities
+{
+	public class GroupField: BaseEntity
+	{
+		public GroupField()
+		{
+			Groups = new List<Group>();
+		}
+		public string Name { get; set; }
+
+		public List<Group> Groups { get; set; }
+	}
+}
+

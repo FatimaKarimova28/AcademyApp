@@ -15,7 +15,8 @@ namespace Core.Constants
         GetAllGroups,
         GetGroupById,
         GetGroupByName,
-        GetAllGroupsByTeacher
+        GetAllGroupsByTeacher,
+        GetAllGroupsByField
 
 
 

@@ -17,11 +17,13 @@ namespace Presentation.Services
         private readonly GroupRepository _groupRepository;
         private readonly StudentRepository _studentRepository;
         private readonly TeacherRepository _teacherRepository;
+        private readonly GroupFieldRepository _groupFieldRepository;
         public GroupService()
         {
             _groupRepository= new GroupRepository();
             _studentRepository = new StudentRepository();
             _teacherRepository = new TeacherRepository();
+            _groupFieldRepository = new GroupFieldRepository();
         }
       
 
@@ -171,6 +173,46 @@ namespace Presentation.Services
 
         }
 
+
+
+        public void GetAllGroupsByField()
+        {
+            var groupFields = _groupFieldRepository.GetAll();
+            foreach (var groupField in groupFields)
+            {
+
+                ConsoleHelper.WriteWithColor($" Id: {groupField.Id}, Name; {groupField.Name}", ConsoleColor.Yellow);
+
+            }
+
+        FieldIdDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Field Id=*=*=*=*=*=*=*=", ConsoleColor.DarkCyan);
+         
+            int id;
+            bool isSucceeded = int.TryParse(Console.ReadLine(), out id);
+            if (!isSucceeded)
+            {
+
+                ConsoleHelper.WriteWithColor("Group field's id is not correct format!", ConsoleColor.Red);
+                Thread.Sleep(1000);
+                goto FieldIdDescription;
+            }
+            var dbGroupField = _groupFieldRepository.Get(id);
+            if (dbGroupField is null)
+            {
+
+                ConsoleHelper.WriteWithColor("There is no any group field in this id!", ConsoleColor.Red);
+                Thread.Sleep(1000);
+                goto FieldIdDescription;
+
+            }
+
+            foreach (var group in dbGroupField.Groups)
+            {
+                ConsoleHelper.WriteWithColor($"Id: {group.Id} \n Name: {group.Name}", ConsoleColor.Yellow);
+            }
+
+        }
+
         public void GetGroupByName(Admin admin)
         {
             var groups = _groupRepository.GetAll();
@@ -225,10 +267,17 @@ namespace Presentation.Services
 
         public void Create(Admin admin)
         {
+            if (_groupFieldRepository.GetAll().Count == 0)
+            {
+
+                ConsoleHelper.WriteWithColor("First you must create a group field!", ConsoleColor.Red);
+
+            }
+
             if (_teacherRepository.GetAll().Count == 0)
             {
 
-                ConsoleHelper.WriteWithColor("You must create a teacher before!", ConsoleColor.Red);
+                ConsoleHelper.WriteWithColor("First you must create a teacher!", ConsoleColor.Red);
 
             }
 
@@ -317,6 +366,30 @@ namespace Presentation.Services
                     goto TeacherIdDescription;
 
                 }
+                var groupFields = _groupFieldRepository.GetAll();
+                foreach (var groupField in groupFields)
+                {
+                    ConsoleHelper.WriteWithColor($"Id: {groupField.Id}, Name: {groupField.Name}", ConsoleColor.Blue);
+                }
+               FieldIdDescription: ConsoleHelper.WriteWithColor("=*=*=*=*=*=*=*=Enter Group field id:=*=*=*=*=*=*=*=", ConsoleColor.Blue);
+                int id;
+                isSucceeded = int.TryParse(Console.ReadLine(), out id);
+                if (!isSucceeded)
+                {
+
+                    ConsoleHelper.WriteWithColor("Group field's id is not correct format!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto FieldIdDescription;
+                }
+                var dbGroupField = _groupFieldRepository.Get(id);
+                if (dbGroupField is  null)
+                {
+
+                    ConsoleHelper.WriteWithColor("There is no any group field in this id!", ConsoleColor.Red);
+                    Thread.Sleep(1000);
+                    goto FieldIdDescription;
+
+                }
 
 
                 group = new Group
@@ -326,12 +399,14 @@ namespace Presentation.Services
                     StartDate = startDate,
                     EndDate = endDate,
                     CreatedBy = admin.Username,
-                    Teacher = dbTeacher
+                    Teacher = dbTeacher,
+                    Field = dbGroupField
                 };
                 dbTeacher.Groups.Add(group);
+                dbGroupField.Groups.Add(group);
 
                 _groupRepository.Add(group);
-                ConsoleHelper.WriteWithColor($"Group successfully created with: \n Name: {group.Name} \n Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n Created By: {group.CreatedBy}", ConsoleColor.Magenta);
+                ConsoleHelper.WriteWithColor($"Group successfully created with: \n Name: {group.Name} \n Id: {group.Id} \n Max Size: {group.MaxSize} \n Start date: {group.StartDate.ToShortDateString()} \n End date: {group.EndDate.ToShortDateString()} \n Field: {group.Field} \n Created By: {group.CreatedBy}", ConsoleColor.Magenta);
 
             }
         }

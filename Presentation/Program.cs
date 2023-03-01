@@ -19,6 +19,7 @@ namespace Presentation
         private readonly static StudentService _studentService;
         private readonly static AdminService _adminService;
         private readonly static TeacherService _teacherService;
+        private readonly static GroupFieldService _groupFieldService;
         static Program()
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -27,6 +28,7 @@ namespace Presentation
             _studentService = new StudentService();
             _adminService = new AdminService();
             _teacherService = new TeacherService();
+            _groupFieldService = new GroupFieldService();
            
         }
         public static object DateTimeStyle { get; private set; }
@@ -50,6 +52,8 @@ namespace Presentation
                     ConsoleHelper.WriteWithColor("1 - Groups", ConsoleColor.Magenta);
                     ConsoleHelper.WriteWithColor("2 - Students", ConsoleColor.Magenta);
                     ConsoleHelper.WriteWithColor("3 - Teachers", ConsoleColor.Magenta);
+                    ConsoleHelper.WriteWithColor("4 - Group Field", ConsoleColor.Magenta);
+
 
                     int number;
                     bool isSucceeded = int.TryParse(Console.ReadLine(), out number);
@@ -95,6 +99,20 @@ namespace Presentation
 
                                         switch (number)
                                         {
+                                            case (int)GroupOptions.BackTomainManu:
+                                                goto MainMenuDescription;
+                                                break;
+                                            case (int)GroupOptions.CreateGroup:
+
+                                                _groupService.Create(admin);
+
+
+                                                break;
+                                            case (int)GroupOptions.DeleteGroup:
+
+                                                _groupService.Delete();
+
+                                                break;
                                             case (int)GroupOptions.GetAllGroups:
 
                                                 _groupService.GetAll(admin);
@@ -104,6 +122,7 @@ namespace Presentation
                                             case (int)GroupOptions.GetGroupById:
 
                                                 _groupService.GetGroupById(admin);
+                                           
                                                 break;
                                             case (int)GroupOptions.GetGroupByName:
                                                 _groupService.GetGroupByName(admin);
@@ -113,28 +132,21 @@ namespace Presentation
                                                 _groupService.GetAllGroupsByTeacher();
                                                 break;
 
-                                            case (int)GroupOptions.CreateGroup:
-
-                                                _groupService.Create(admin);
-
-
-                                                break;
+                                                
+                                            
 
 
                                             case (int)GroupOptions.UpdateGroup:
                                                 _groupService.Update(admin);
                                                 break;
-
-
-                                            case (int)GroupOptions.DeleteGroup:
-
-                                                _groupService.Delete();
-
+                                            case (int)GroupOptions.GetAllGroupsByField:
+                                                _groupService.GetAllGroupsByField();
                                                 break;
 
-                                            case (int)GroupOptions.BackTomainManu:
-                                                goto MainMenuDescription;
-                                                break;
+
+
+
+
                                             default:
                                                 ConsoleHelper.WriteWithColor("Inputed number is not exist!", ConsoleColor.Red);
                                                 goto GroupDescription;
@@ -254,6 +266,57 @@ namespace Presentation
 
 
                                 }
+
+                            case (int)MainMenuOptions.GroupFields:
+                                while (true)
+                                {
+                                    GroupFieldDescription:
+                                    ConsoleHelper.WriteWithColor("0 - Go to the Main Menu", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("1 - Create Group Field", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("2 - Delete Group Field", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("3 - Update Group Field", ConsoleColor.DarkBlue);
+                                    ConsoleHelper.WriteWithColor("4 - Get All Group Fields", ConsoleColor.DarkBlue);
+
+                                    int desc;
+                                    isSucceeded = int.TryParse(Console.ReadLine(), out desc);
+                                    if (!isSucceeded)
+                                    {
+                                        ConsoleHelper.WriteWithColor("Inputed number is not correct format!", ConsoleColor.Red);
+                                        Thread.Sleep(1000);
+                                        goto GroupFieldDescription;
+
+
+                                    }
+
+                                    switch (desc)
+                                    {
+
+
+                                        case (int)GroupFieldOptions.AddGroupField:
+                                            _groupFieldService.Create();
+                                            break;
+                                        case (int)GroupFieldOptions.RemoveGroupField:
+                                            _groupFieldService.Remove();
+                                            break;
+                                        case (int)GroupFieldOptions.GetAllGroupField:
+                                            _groupFieldService.GetAll();
+                                            break;
+
+                                        case (int)GroupFieldOptions.MainMenu:
+                                            goto MainMenuDescription;
+
+                                        case (int)GroupFieldOptions.UpdateGroupField:
+                                            _groupFieldService.Update();
+                                            break;
+                                        default:
+                                            ConsoleHelper.WriteWithColor("Inputed number is not exist!", ConsoleColor.Red);
+                                            break;
+
+                                    }
+
+
+                                }
+
                             default:
                                 ConsoleHelper.WriteWithColor("Inputed number is not exist!", ConsoleColor.Red);
                                 goto MainMenuDescription;

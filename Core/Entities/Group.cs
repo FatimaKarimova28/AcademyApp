@@ -27,6 +27,11 @@ namespace Core.Entities
 
         public int TeacherId { get; set; }
 
+        public GroupField Field { get; set; }
+
+        public int FieldId { get; set; }
+
+
 
     }
 }

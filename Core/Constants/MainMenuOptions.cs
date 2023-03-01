@@ -9,7 +9,8 @@ namespace Core.Constants
 			Logout,
 			Groups,
 			Students,
-			Teachers
+			Teachers,
+			GroupFields
 		}
 	
 }

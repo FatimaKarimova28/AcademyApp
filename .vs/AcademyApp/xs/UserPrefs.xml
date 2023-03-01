@@ -1,17 +1,10 @@
 ﻿<Properties StartupConfiguration="{D1524438-4714-4C15-94E6-01FD022E5968}|Default">
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.AcademyApp PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Presentation/Program.cs">
-    <Files>
-      <File FileName="Presentation/Program.cs" Line="1" Column="1" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="AcademyApp" expanded="True" selected="True">
+          <Node name="AcademyApp" expanded="True">
+            <Node name="AcademyApp" expanded="True" />
             <Node name="Core" expanded="True">
               <Node name="Constants" expanded="True" />
               <Node name="Entities" expanded="True" />
@@ -26,14 +19,21 @@
               </Node>
             </Node>
             <Node name="Presentation" expanded="True">
-              <Node name="Services" expanded="True" />
+              <Node name="Services" expanded="True">
+                <Node name="GroupFieldService.cs" selected="True" />
+              </Node>
             </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.AcademyApp PreferredExecutionTarget="MonoDevelop.Default" />
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.Presentation PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
 </Properties>
